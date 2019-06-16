@@ -59,7 +59,7 @@ This runs a function called `updateFood`. This function currently updates all in
 records = zoho.crm.getRecords("Food");
 for each  record in records
 {
-	userIF = record.get("User").get("id");
+	userID = record.get("User").get("id");
 	user = zoho.crm.getRecordById("Accounts",userID);
 
     // This copies the personal info fields
