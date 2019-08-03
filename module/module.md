@@ -33,11 +33,10 @@ Each entry contains:
 
 ## Buttons
 ### Received today
-This is a button to quickly add the default package to the history.  
+This is a button to quickly add the default package to the history. It also checks if the button isn't double pressed.
 This is a button on the view page that contains a function `addToday`. This function received the ID of the entry as `foodID`.
 ```deluge
 entry = zoho.crm.getRecordById("Food",foodID.toNumber());
-
 defaultReceived = list();
 defaultReceived.add("Food");
 
@@ -45,9 +44,17 @@ todayFood = Map();
 todayFood.put("Date",today);
 todayFood.put("Received",defaultReceived);
 
-subform = entry.get("Subform_1"); // may be different name
-subform.add(todayFood);
-zoho.crm.updateRecord("Food", foodID.toNumber(), entry);
+newList = list();
+subform = entry.get("History");
+if(subform.len() != 0 && subform.get(0).get("Datum").toDate() == today.toDate())
+{
+	return "Already received food";
+}
 
+newList.add(todayFood);
+newList.addAll(subform);
+
+entry.put("History",newList);
+zoho.crm.updateRecord("Food",foodID.toNumber(),entry);
 return "OK!"; //message given to user
 ```
